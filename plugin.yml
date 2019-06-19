@@ -1,0 +1,7 @@
+name: NapThe
+author: MasterClaus
+version: 1.0
+main: net.minefs.DoiCard.DoiCard
+depends: [PlayerPoints]
+commands:
+ napthe:
