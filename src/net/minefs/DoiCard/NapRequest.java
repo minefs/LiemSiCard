@@ -60,6 +60,7 @@ public class NapRequest {
 		setCode(msg);
 		p.sendMessage("§b§lMã thẻ: §a§l" + code);
 		p.sendMessage("§b§lĐang tiến hành nạp thẻ, xin chờ...");
+		getRequests().remove(p.getName());
 		Map<String, String> mapparams = new HashMap<String, String>();
 //        'partner_id' => $partner_id,
 //        'request_id' => $request_id,

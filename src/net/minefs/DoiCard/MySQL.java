@@ -20,7 +20,8 @@ public class MySQL {
 
 	private static MySQL _instance;
 
-	private final String NAPTHE_LOG = "insert into napthe_log(name, uuid, seri, pin, loai, time, menhgia, success, server, pointsnhan, thucnhan) values(?,?,?,?,?,?,?,?,?,?,?)";
+	private final String NAPTHE_LOG = "insert into napthe_log(name, uuid, seri, pin, loai, time, menhgia, success, server, pointsnhan, thucnhan)"
+			+ " values(?,?,?,?,?,?,?,?,?,?,?)";
 	private final String NAPTHE_LOG_SUCCESS = "update napthe_log set success=1, pointsnhan=?, thucnhan=? where id=?";
 	private final String POINTS_CONSUME_LOG = "insert into points_consume_log(player, current, amount, time, server) values(?,?,?,?,?)";
 
