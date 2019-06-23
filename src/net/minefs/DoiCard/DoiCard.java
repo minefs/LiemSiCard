@@ -31,6 +31,7 @@ public class DoiCard extends JavaPlugin {
 	private int port;
 	private static DoiCard _instance;
 	private PlayerPoints pp;
+	private double tile;
 
 	@Override
 	public void onEnable() {
@@ -44,7 +45,7 @@ public class DoiCard extends JavaPlugin {
 				@EventHandler
 				public void onClick(InventoryClickEvent e) {
 					Inventory inv = e.getClickedInventory();
-					if (inv.getHolder() instanceof GuiInventory)
+					if (inv.getHolder() != null && inv.getHolder() instanceof GuiInventory)
 						((GuiInventory) inv.getHolder()).onClick(e);
 				}
 
@@ -114,7 +115,7 @@ public class DoiCard extends JavaPlugin {
 		server = getConfig().getString("server");
 		id = getConfig().getString("id");
 		key = getConfig().getString("key");
-		// tile = getConfig().getDouble("tile");
+		tile = getConfig().getDouble("tile");
 		user = getConfig().getString("mysql.user");
 		host = getConfig().getString("mysql.host");
 		db = getConfig().getString("mysql.database");
@@ -136,6 +137,10 @@ public class DoiCard extends JavaPlugin {
 
 	public String getKey() {
 		return key;
+	}
+
+	public double getTile() {
+		return tile;
 	}
 
 	@Override

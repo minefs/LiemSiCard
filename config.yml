@@ -1,6 +1,7 @@
 id: 'key'
 key: 'xxx'
-server: 'towny'
+server: 'towny' # Ten server tren MySQL
+tile: 1 # KM 50% thi ti le la 1.5, KM 100% thi ti le la 2
 mysql:
  enabled: true
  host: localhost

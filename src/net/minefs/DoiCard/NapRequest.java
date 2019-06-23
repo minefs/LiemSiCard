@@ -112,7 +112,8 @@ public class NapRequest {
 		case 1:
 			int amount = root.get("value").getAsInt();
 			int pts = amount / 1000;
-			dc.getPlayerPointsIns().getAPI().give(p.getUniqueId(), (int) pts);
+			pts *= dc.getTile();
+			dc.getPlayerPointsIns().getAPI().give(p.getUniqueId(), pts);
 			p.sendMessage("§a§lNạp thẻ thành công, bạn nhận được " + pts + " points");
 			int thucnhan = root.get("amount").getAsInt();
 			if (mysql != null)
