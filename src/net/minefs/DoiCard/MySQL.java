@@ -24,6 +24,7 @@ public class MySQL {
 			+ " values(?,?,?,?,?,?,?,?,?,?,?)";
 	private final String NAPTHE_LOG_SUCCESS = "update napthe_log set success=1, pointsnhan=?, thucnhan=? where id=?";
 	private final String POINTS_CONSUME_LOG = "insert into points_consume_log(player, current, amount, time, server) values(?,?,?,?,?)";
+	private final String TABLE_CREATE = "CREATE TABLE IF NOT EXISTS `napthe_log` (  `id` mediumint(11) NOT NULL AUTO_INCREMENT,  `name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',  `uuid` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',  `seri` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',  `pin` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',  `loai` varchar(255) COLLATE utf8_bin NOT NULL,  `time` int(11) NOT NULL DEFAULT 0,  `menhgia` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT '',  `success` int(2) NOT NULL DEFAULT 0,  `server` varchar(15) COLLATE utf8_bin NOT NULL DEFAULT 'web',  `pointsnhan` int(11) NOT NULL DEFAULT 0,  `thucnhan` int(11) NOT NULL DEFAULT 0,  PRIMARY KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
 
 	public MySQL(String host, int port, String user, String password, String db) {
 		this.host = host;
@@ -31,22 +32,23 @@ public class MySQL {
 		this.password = password;
 		this.port = port;
 		this.db = db;
-		open(host, port, db, user, password);
-		task = new BukkitRunnable() {
-			@Override
-			public void run() {
-				keepAlive();
+		if (open(host, port, db, user, password) && createTable()) {
+			task = new BukkitRunnable() {
+				@Override
+				public void run() {
+					keepAlive();
+				}
+			};
+			task.runTaskTimerAsynchronously(DoiCard.getInstance(), 3600, 3600);
+			if (_instance != null) {
+				_instance.task.cancel();
+				_instance.close();
 			}
-		};
-		task.runTaskTimerAsynchronously(DoiCard.getInstance(), 3600, 3600);
-		if (_instance != null) {
-			_instance.task.cancel();
-			_instance.close();
+			_instance = this;
 		}
-		_instance = this;
 	}
 
-	private synchronized void open(String host, int port, String db, String user, String pwd) {
+	private synchronized boolean open(String host, int port, String db, String user, String pwd) {
 		enabled = false;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -62,7 +64,9 @@ public class MySQL {
 			};
 		} catch (Exception e) {
 			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Can't open SQL connection", e);
+			return false;
 		}
+		return true;
 	}
 
 	public synchronized void close() {
@@ -128,7 +132,7 @@ public class MySQL {
 			while (r.next())
 				return r.getInt(1);
 		} catch (SQLException exc) {
-			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Can't log", exc);
+			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Loi xay ra khi log", exc);
 //			restart();
 //			Bukkit.getScheduler().runTaskLaterAsynchronously(DoiCard.getInstance(),
 //					() -> log(player, cardtype, seri, code, menhgia, server, success, pointnhan, thucnhan), 20);
@@ -170,7 +174,7 @@ public class MySQL {
 			s = sql.createStatement();
 			r = s.executeQuery("select time from napthe_log where 1=0");
 		} catch (Exception e) {
-			DoiCard.getInstance().getLogger().log(Level.SEVERE, "MySQL keep alive error", e);
+			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Khong the chay lenh keepalive", e);
 		} finally {
 			cleanup(r, s);
 		}
@@ -185,9 +189,24 @@ public class MySQL {
 			s.setInt(3, id);
 			s.executeUpdate();
 		} catch (Exception e) {
-			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Can't update success status for log #" + id, e);
+			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Khong the cap nhat trang thai success cho log #" + id,
+					e);
 		} finally {
 			cleanup(null, s);
 		}
+	}
+
+	public synchronized boolean createTable() {
+		PreparedStatement s = null;
+		try {
+			s = sql.prepareStatement(TABLE_CREATE);
+			s.executeUpdate();
+		} catch (Exception e) {
+			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Khong the tao bang", e);
+			return false;
+		} finally {
+			cleanup(null, s);
+		}
+		return true;
 	}
 }

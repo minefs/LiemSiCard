@@ -40,12 +40,13 @@ public class DoiCard extends JavaPlugin {
 		saveDefaultConfig();
 		try {
 			loadConfig();
+			getLogger().info("Mo ket noi MySQL...");
 			new MySQL(host, port, user, pass, db);
 			Bukkit.getServer().getPluginManager().registerEvents(new Listener() {
 				@EventHandler
 				public void onClick(InventoryClickEvent e) {
 					Inventory inv = e.getClickedInventory();
-					if (inv.getHolder() != null && inv.getHolder() instanceof GuiInventory)
+					if (inv != null && inv.getHolder() != null && inv.getHolder() instanceof GuiInventory)
 						((GuiInventory) inv.getHolder()).onClick(e);
 				}
 
@@ -66,7 +67,11 @@ public class DoiCard extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-
+		MySQL sql = MySQL.getInstance();
+		if (sql != null) {
+			getLogger().info("Dong ket noi MySQL...");
+			MySQL.getInstance().close();
+		}
 	}
 
 	@SuppressWarnings("rawtypes")

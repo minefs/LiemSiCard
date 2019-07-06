@@ -27,11 +27,8 @@ public class GuiInventory implements InventoryHolder {
 	}
 
 	public void onClick(InventoryClickEvent e) {
-//		e.getWhoClicked().sendMessage("a");
 		GuiItemStack i = actions[e.getSlot()];
 		if (i != null)
 			i.onClick(e);
-		else
-			e.getWhoClicked().sendMessage("null " + e.getSlot());
 	}
 }
