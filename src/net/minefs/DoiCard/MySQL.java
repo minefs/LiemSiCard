@@ -63,7 +63,7 @@ public class MySQL {
 				}
 			};
 		} catch (Exception e) {
-			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Can't open SQL connection", e);
+			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Khong the mo ket noi MySQL", e);
 			return false;
 		}
 		return true;
@@ -76,7 +76,7 @@ public class MySQL {
 			task = null;
 			sql.close();
 		} catch (SQLException e) {
-			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Can't close connection", e);
+			DoiCard.getInstance().getLogger().log(Level.SEVERE, "Khong the dong ket noi MySQL", e);
 		}
 	}
 

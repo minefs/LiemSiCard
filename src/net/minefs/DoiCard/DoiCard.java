@@ -20,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.minefs.DoiCard.Gui.TelcoSelector;
@@ -72,6 +73,15 @@ public class DoiCard extends JavaPlugin {
 			getLogger().info("Dong ket noi MySQL...");
 			MySQL.getInstance().close();
 		}
+		getLogger().info("Dong inventory...");
+		Bukkit.getOnlinePlayers().forEach(p -> {
+			InventoryView view = p.getOpenInventory();
+			if (view == null)
+				return;
+			Inventory inv = view.getTopInventory();
+			if (inv != null && inv.getHolder() != null && inv.getHolder() instanceof GuiInventory)
+				p.closeInventory();
+		});
 	}
 
 	@SuppressWarnings("rawtypes")

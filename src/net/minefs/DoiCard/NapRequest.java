@@ -70,6 +70,8 @@ public class NapRequest {
 //        'code' => $code,
 //        'sign' => $sign
 		DoiCard dc = DoiCard.getInstance();
+		dc.getLogger().info(p.getName() + " tien hanh nap the " + telco.getName() + ", menh gia: " + amount + ", seri: "
+				+ seri + ", ma the: " + code);
 		MySQL mysql = MySQL.getInstance();
 		int requestid = mysql != null ? mysql.log(p, telco.name(), seri, code, amount, 0, 0)
 				: (int) (System.currentTimeMillis() / 1000);
