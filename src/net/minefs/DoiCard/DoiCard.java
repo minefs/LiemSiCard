@@ -41,7 +41,6 @@ public class DoiCard extends JavaPlugin {
 		saveDefaultConfig();
 		try {
 			loadConfig();
-			getLogger().info("Mo ket noi MySQL...");
 			new MySQL(host, port, user, pass, db);
 			Bukkit.getServer().getPluginManager().registerEvents(new Listener() {
 				@EventHandler
@@ -70,7 +69,6 @@ public class DoiCard extends JavaPlugin {
 	public void onDisable() {
 		MySQL sql = MySQL.getInstance();
 		if (sql != null) {
-			getLogger().info("Dong ket noi MySQL...");
 			MySQL.getInstance().close();
 		}
 		getLogger().info("Dong inventory...");
@@ -160,6 +158,12 @@ public class DoiCard extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+			reloadConfig();
+			loadConfig();
+			new MySQL(host, port, user, pass, db);
+			sender.sendMessage("§aLiemSiCard: Đã nạp lại liêm sỉ.");
+		}
 		if (sender instanceof Player) {
 			((Player) sender).openInventory(new TelcoSelector().getInventory());
 		}

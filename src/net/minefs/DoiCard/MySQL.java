@@ -32,6 +32,11 @@ public class MySQL {
 		this.password = password;
 		this.port = port;
 		this.db = db;
+		if (_instance != null) {
+			_instance.task.cancel();
+			_instance.close();
+			_instance = null;
+		}
 		if (open(host, port, db, user, password) && createTable()) {
 			task = new BukkitRunnable() {
 				@Override
@@ -40,15 +45,12 @@ public class MySQL {
 				}
 			};
 			task.runTaskTimerAsynchronously(DoiCard.getInstance(), 3600, 3600);
-			if (_instance != null) {
-				_instance.task.cancel();
-				_instance.close();
-			}
 			_instance = this;
 		}
 	}
 
 	private synchronized boolean open(String host, int port, String db, String user, String pwd) {
+		DoiCard.getInstance().getLogger().info("Mo ket noi MySQL...");
 		enabled = false;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -70,6 +72,7 @@ public class MySQL {
 	}
 
 	public synchronized void close() {
+		DoiCard.getInstance().getLogger().info("Dong ket noi MySQL...");
 		try {
 			if (task != null)
 				task.cancel();
