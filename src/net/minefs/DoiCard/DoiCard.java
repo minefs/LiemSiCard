@@ -55,8 +55,8 @@ public class DoiCard extends JavaPlugin {
 				public void onChat(AsyncPlayerChatEvent e) {
 					NapRequest request = NapRequest.getRequests().get(e.getPlayer().getName());
 					if (request != null) {
-						request.onChat(e.getMessage());
 						e.setCancelled(true);
+						request.onChat(e.getMessage());
 					}
 				}
 			}, this);
