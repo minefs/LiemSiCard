@@ -16,6 +16,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -50,7 +51,7 @@ public class DoiCard extends JavaPlugin {
 						((GuiInventory) inv.getHolder()).onClick(e);
 				}
 
-				@EventHandler
+				@EventHandler(priority = EventPriority.HIGHEST)
 				public void onChat(AsyncPlayerChatEvent e) {
 					NapRequest request = NapRequest.getRequests().get(e.getPlayer().getName());
 					if (request != null) {
@@ -163,6 +164,7 @@ public class DoiCard extends JavaPlugin {
 			loadConfig();
 			new MySQL(host, port, user, pass, db);
 			sender.sendMessage("§aLiemSiCard: Đã nạp lại liêm sỉ.");
+			return true;
 		}
 		if (sender instanceof Player) {
 			((Player) sender).openInventory(new TelcoSelector().getInventory());
